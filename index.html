@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111714">
+    <meta name="description" content="A focused workspace for streaming AI responses, refining prompts, and reviewing generated work.">
+    <title>Forma Studio | AI Content Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#main" aria-label="Forma Studio home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="brand-name">forma<span class="brand-light">/studio</span></span>
+        </a>
+        <div class="topbar-center"><span class="workspace-label">WORKSPACE</span><span class="workspace-name">Untitled session</span></div>
+        <nav class="topbar-actions" aria-label="Workspace controls">
+          <span class="connection-state" id="connectionState"><span class="state-dot"></span><span id="connectionLabel">Ready</span></span>
+          <button class="icon-button" id="historyOpen" type="button" aria-label="Open generation history" title="History">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8m0-5v5h5m4-1v5l3 2"/></svg>
+          </button>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/></svg>
+          </button>
+        </nav>
+      </header>
+
+      <main class="studio" id="main">
+        <aside class="composer" aria-label="Prompt configuration">
+          <div class="panel-heading">
+            <div><p class="eyebrow">PROMPT WORKBENCH <span class="heading-index">01</span></p><h1>Shape the output.</h1></div>
+            <span class="live-mark" aria-label="Ready"><span></span> LIVE</span>
+          </div>
+
+          <div class="field-group preset-group">
+            <label for="presetSelect">START WITH A TEMPLATE</label>
+            <div class="select-wrap">
+              <select id="presetSelect">
+                <option value="">Choose a starting point</option>
+                <option value="summarize">Summarize code</option>
+                <option value="refactor">Refactor JavaScript</option>
+                <option value="email">Draft technical email</option>
+                <option value="test">Create unit tests</option>
+              </select>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+            </div>
+          </div>
+
+          <div class="field-group prompt-group">
+            <div class="label-row"><label for="promptInput">YOUR PROMPT</label><span class="field-hint" id="promptCount">0 chars</span></div>
+            <textarea id="promptInput" rows="6" placeholder="What would you like to work on? Add context, constraints, and a clear outcome..." spellcheck="true"></textarea>
+            <div class="prompt-meta"><span><kbd>⌘</kbd><kbd>↵</kbd> to generate</span><span id="lineCount">1 line</span></div>
+          </div>
+
+          <div class="field-group system-group">
+            <div class="label-row"><label for="systemInput">SYSTEM INSTRUCTIONS</label><span class="field-hint">OPTIONAL</span></div>
+            <textarea id="systemInput" rows="3" placeholder="You are a thoughtful, precise technical assistant..."></textarea>
+          </div>
+
+          <details class="settings-section" id="connectionSettings">
+            <summary><span class="settings-summary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5v2m0 11v2m7.5-7.5h-2m-11 0h-2m12.8-5.3-1.4 1.4m-7.8 7.8-1.4 1.4m10.6 0-1.4-1.4m-7.8-7.8L4.7 4.7"/><circle cx="10" cy="10" r="3.2"/></svg> CONNECTION SETTINGS</span><svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></summary>
+            <div class="settings-content">
+              <div class="field-group compact-field">
+                <div class="label-row"><label for="apiKeyInput">API KEY</label><span class="saved-indicator" id="keySaved" aria-live="polite"></span></div>
+                <div class="input-with-action"><input id="apiKeyInput" type="password" autocomplete="off" placeholder="Paste your API key"><button class="reveal-button" id="keyReveal" type="button" aria-label="Show API key">SHOW</button></div>
+                <p class="microcopy">Stored in this browser only. Not encrypted.</p>
+              </div>
+              <div class="field-group compact-field">
+                <label for="endpointInput">CHAT COMPLETIONS ENDPOINT</label>
+                <input id="endpointInput" type="url" spellcheck="false" value="https://api.groq.com/openai/v1/chat/completions" placeholder="https://…/v1/chat/completions">
+              </div>
+              <div class="field-group compact-field">
+                <label for="modelInput">MODEL</label>
+                <input id="modelInput" type="text" spellcheck="false" value="llama-3.3-70b-versatile" placeholder="Model identifier">
+              </div>
+            </div>
+          </details>
+
+          <div class="composer-footer">
+            <p class="privacy-note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 2.5 4v3.7c0 3.2 2.2 5.6 5.5 6.8 3.3-1.2 5.5-3.6 5.5-6.8V4L8 1.5Z"/><path d="m5.5 8 1.6 1.6 3.5-3.5"/></svg> Your prompt stays yours.</p>
+            <button class="generate-button" id="generateButton" type="button">
+              <span class="generate-label">Generate response</span>
+              <svg class="generate-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
+              <span class="button-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="local-note">Direct connection to your selected API. Configure endpoint, model, and key above.</p>
+        </aside>
+
+        <section class="output-panel" aria-label="Generated response">
+          <div class="output-toolbar">
+            <div class="output-title"><span class="output-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 4.5h14M3 8h14M3 11.5h9M3 15h7"/></svg></span><div><p class="eyebrow">RESPONSE CANVAS <span class="heading-index">02</span></p><h2>Generated output</h2></div></div>
+            <div class="output-actions"><span class="stream-badge" id="streamBadge"><span class="state-dot"></span><span id="streamLabel">AWAITING INPUT</span></span><button class="copy-output-button" id="copyOutput" type="button" disabled><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="6" y="6" width="9" height="10" rx="1.5"/><path d="M12 6V3.5A1.5 1.5 0 0 0 10.5 2h-7A1.5 1.5 0 0 0 2 3.5v8A1.5 1.5 0 0 0 3.5 13H6"/></svg><span>Copy output</span></button></div>
+          </div>
+          <div class="output-scroll" id="outputScroll">
+            <div class="empty-state" id="emptyState">
+              <div class="empty-art" aria-hidden="true"><span class="art-ring ring-one"></span><span class="art-ring ring-two"></span><span class="art-core"><span></span><span></span><span></span></span><span class="art-spark spark-one"></span><span class="art-spark spark-two"></span></div>
+              <p class="eyebrow">A CLEAR SPACE TO THINK</p>
+              <h3>Your next good idea<br>starts here.</h3>
+              <p class="empty-description">Add a prompt, tune your instructions, and generate a response. Your result will unfold here as it streams in.</p>
+              <div class="empty-shortcuts"><span><span class="shortcut-icon">↵</span> Live Markdown</span><span><span class="shortcut-icon">⌘</span> Code aware</span></div>
+            </div>
+            <article class="markdown-body" id="outputContent" aria-live="polite" aria-atomic="false" hidden></article>
+            <div class="output-error" id="outputError" role="alert" hidden></div>
+          </div>
+          <footer class="output-footer"><span id="responseMeta">No response yet</span><span class="footer-engine"><span class="engine-dot"></span> STREAM ENGINE <span class="footer-divider">/</span> FETCH + READABLESTREAM</span></footer>
+        </section>
+      </main>
+      <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+    </div>
+
+    <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+    <aside class="history-drawer" id="historyDrawer" role="dialog" aria-modal="true" aria-labelledby="historyTitle" aria-hidden="true" inert>
+      <div class="drawer-header"><div><p class="eyebrow">YOUR WORK, KEPT CLOSE</p><h2 id="historyTitle">Session history</h2></div><button class="icon-button drawer-close" id="historyClose" type="button" aria-label="Close history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <label class="history-search"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.8" cy="7.8" r="5.3"/><path d="m12 12 4 4"/></svg><input id="historySearch" type="search" placeholder="Search prompts..." aria-label="Search session history"></label>
+      <div class="history-list" id="historyList"></div>
+      <div class="drawer-footer"><span id="historyCount">0 saved sessions</span><button class="clear-history" id="clearHistory" type="button" disabled>Clear all</button></div>
+    </aside>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.6/purify.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
